@@ -25,7 +25,7 @@ var BASES = {
 var RESOURCE_DIR = 'resources';
 
 // Helper function for file copying that ensures directory existence.
-function copyFile (src, dest, ncpOpts, callback) {
+function copyFile(src, dest, ncpOpts, callback) {
   var orchestrator = new Orchestrator();
   var parts = dest.split(path.sep);
   var fileName = parts.pop();
@@ -55,23 +55,25 @@ _.each(platforms, function (platform) {
   glob(base + '/**/*.png', function (err, files) {
     _.each(files, function (cordovaFile) {
       var orchestrator = new Orchestrator();
-      var parts = cordovaFile.split('/');
+      var parts = cordovaFile.split(path.sep);
       var fileName = parts.pop();
       var localDir = path.resolve(RESOURCE_DIR, platform, _.last(parts));
       var localFile = path.resolve(localDir, fileName);
 
       orchestrator.add('copyFromCordova', function (done) {
-        copyFile(cordovaFile, localFile, { clobber: false }, function (err) {
+        copyFile(cordovaFile, localFile, {clobber: false}, function (err) {
           done(err);
         });
       });
       orchestrator.add('copyToCordova', ['copyFromCordova'], function (done) {
-        copyFile(localFile, cordovaFile, { clobber: true }, function (err) {
+        copyFile(localFile, cordovaFile, {clobber: true}, function (err) {
           done(err);
         });
       });
       orchestrator.start('copyToCordova', function (err) {
-        if (err) { console.error(err); }
+        if (err) {
+          console.error(err);
+        }
       });
     });
   });
