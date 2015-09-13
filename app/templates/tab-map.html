@@ -2,7 +2,9 @@
     <ion-content class="padding">
         <h1>Disneyland Beer Guide Map</h1>
 
-        <ui-gmap-google-map center='map.center' zoom='map.zoom'></ui-gmap-google-map>
+        <ui-gmap-google-map center='map.center' zoom='map.zoom'>
+          <ui-gmap-markers models="markers" coords="'coords'" idKey="'idKey'"></ui-gmap-markers>
+        </ui-gmap-google-map>
 
     </ion-content>
 </ion-view>

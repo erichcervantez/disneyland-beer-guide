@@ -39,7 +39,7 @@ mongoClient.open(function (err, mongoClient) {
     console.error("Error! Exiting... Must start MongoDB first");
     process.exit(1);
   }
-  var db = mongoClient.db("MyDatabase");
+  var db = mongoClient.db("BeerDatabase");
   collectionDriver = new CollectionDriver(db);
 });
 
@@ -56,13 +56,31 @@ app.use(express.static(path.join(__dirname, 'public')));
 //      res.send(req.params.a + ' ' + req.params.b + ' ' + req.params.c);
 //});
 
+app.get('/', function (req, res) {
+  res.json({message: 'Hello World!'});
+});
 
 app.get('/:collection', function (req, res) {
   var params = req.params;
   collectionDriver.findAll(req.params.collection, function (error, objs) {
     if (error) {
       res.send(400, error);
-    } //D
+    }
+    else {
+      res.set('Content-Type', 'application/json');
+      res.json('data', {objects: objs, collection: req.params.collection});
+      res.send(200, objs);
+    }
+  });
+});
+
+
+/**app.get('/:collection', function (req, res) {
+  var params = req.params;
+  collectionDriver.findAll(req.params.collection, function (error, objs) {
+    if (error) {
+      res.send(400, error);
+    }
     else {
       if (req.accepts('html')) {
         res.render('data', {objects: objs, collection: req.params.collection});
@@ -72,7 +90,7 @@ app.get('/:collection', function (req, res) {
       }
     }
   });
-});
+});**/
 
 
 app.get('/:collection/:entity', function (req, res) {
@@ -86,7 +104,7 @@ app.get('/:collection/:entity', function (req, res) {
       }
       else {
         res.send(200, objs);
-      } //K
+      }
     });
   } else {
     res.send(400, {error: 'bad url', url: req.url});
@@ -103,7 +121,7 @@ app.post('/:collection', function (req, res) {
     }
     else {
       res.send(201, docs);
-    } //B
+    }
   });
 });
 
